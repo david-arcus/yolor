@@ -121,7 +121,29 @@ def detect(save_img=False):
 
                     if save_img or view_img:  # Add bbox to image
                         label = '%s %.2f' % (names[int(cls)], conf)
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+                        ####################################>>>>>>>>>> START of modified code <<<<<<<<<<<########################## 
+                        #############>> commented this line to not to print bounding box on image
+                        # plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+
+                        x1 = int(xyxy[0].item())
+                        y1 = int(xyxy[1].item())
+                        x2 = int(xyxy[2].item())
+                        y2 = int(xyxy[3].item())
+
+                        confidence_score = conf
+                        class_index = cls
+                        object_name = names[int(cls)]
+
+                        print('bounding box is ', x1, y1, x2, y2)
+                        print('class index is ', class_index)
+                        print('detected object name is ', object_name)
+                        original_img = im0
+                        cropped_img = im0[y1:y2, x1:x2]
+                        cv2.imwrite('test.png',cropped_img) ### >>>>>> to retain all cropped picture give different name for each pictures, else it will overwrite and only last image will be saved.
+                        
+####################################>>>>>>>>>> END of modified code <<<<<<<<<<<##########################    
+                        
+
 
             # Print time (inference + NMS)
             print('%sDone. (%.3fs)' % (s, t2 - t1))
