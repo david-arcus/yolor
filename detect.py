@@ -139,8 +139,9 @@ def detect(save_img=False):
 
                         # print('class index is ', class_index)
                         # print('detected object name is ', object_name)
-
-                        if x2 - x1 > 40:
+                        
+                        # crop any image detection larger than 80 pixels wide
+                        if x2 - x1 > 80:
                             
                             # expand box
 
