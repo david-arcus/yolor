@@ -158,7 +158,7 @@ def detect(save_img=False):
                             current_date_and_time = datetime.datetime.now()
                             current_date_and_time_string = str(current_date_and_time)
                             if object_name == 'person':
-                                cv2.imwrite('/content/drive/MyDrive/YOLOR-Output/' + current_date_and_time_string+'.png',cropped_img) ### >>>>>> to retain all cropped picture give different name for each pictures, else it will overwrite and only last image will be saved.
+                                cv2.imwrite(save_path + current_date_and_time_string+'.png',cropped_img) ### >>>>>> to retain all cropped picture give different name for each pictures, else it will overwrite and only last image will be saved.
 
 
             # Print time (inference + NMS)
