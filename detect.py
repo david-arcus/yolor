@@ -4,6 +4,7 @@ import platform
 import shutil
 import time
 from pathlib import Path
+import datetime
 
 import cv2
 import torch
@@ -121,8 +122,8 @@ def detect(save_img=False):
 
                     if save_img or view_img:  # Add bbox to image
                         label = '%s %.2f' % (names[int(cls)], conf)
-                        ####################################>>>>>>>>>> START of modified code <<<<<<<<<<<########################## 
-                        #############>> commented this line to not to print bounding box on image
+                        
+                        # remove bounding box from image (this will remove from output video too)
                         # plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
                         x1 = int(xyxy[0].item())
@@ -130,19 +131,33 @@ def detect(save_img=False):
                         x2 = int(xyxy[2].item())
                         y2 = int(xyxy[3].item())
 
+                        print('bounding box is ', x1, y1, x2, y2)
+
                         confidence_score = conf
                         class_index = cls
                         object_name = names[int(cls)]
 
-                        print('bounding box is ', x1, y1, x2, y2)
-                        print('class index is ', class_index)
-                        print('detected object name is ', object_name)
-                        original_img = im0
-                        cropped_img = im0[y1:y2, x1:x2]
-                        cv2.imwrite('test.png',cropped_img) ### >>>>>> to retain all cropped picture give different name for each pictures, else it will overwrite and only last image will be saved.
-                        
-####################################>>>>>>>>>> END of modified code <<<<<<<<<<<##########################    
-                        
+                        # print('class index is ', class_index)
+                        # print('detected object name is ', object_name)
+
+                        if x2 - x1 > 40:
+                            
+                            # expand box
+
+                            x1 = int(x1 - 100)
+                            x2 = int(x2 + 100)
+                            y1 = int(y1 - 100)
+                            y2 = int(y2 + 100)
+
+                            print('expanded box is ', x1, y1, x2, y2)
+
+                            original_img = im0
+                            cropped_img = im0[y1:y2, x1:x2]
+
+                            current_date_and_time = datetime.datetime.now()
+                            current_date_and_time_string = str(current_date_and_time)
+                            if object_name == 'person':
+                                cv2.imwrite('/content/drive/MyDrive/YOLOR-Output/' + current_date_and_time_string+'.png',cropped_img) ### >>>>>> to retain all cropped picture give different name for each pictures, else it will overwrite and only last image will be saved.
 
 
             # Print time (inference + NMS)
@@ -206,3 +221,4 @@ if __name__ == '__main__':
                 strip_optimizer(opt.weights)
         else:
             detect()
+
